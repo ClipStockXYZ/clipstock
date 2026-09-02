@@ -8,11 +8,11 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ClipStock · the desk clips NVDA" },
+      { title: "ClipStock · the desk clips the tape" },
       { name: "theme-color", content: "#1f6b4a" },
       {
         name: "description",
-        content: "ClipStock. Trade ETH. The desk clips NVDA. Holders take the shares.",
+        content: "ClipStock. Trade ETH. The desk clips the tape. Holders take the shares.",
       },
     ],
     links: [

@@ -8,6 +8,7 @@ export const SEL = {
   epochEndsAt: "0xb0dd24c8",
   unassigned: "0x73afce6e",
   clipToken: "0x54e1d59f",
+  clipAsset: "0x7aec4e12",
   poolFee: "0x089fe6aa",
   minClip: "0xf87038aa",
   keeper: "0xaced1661",
@@ -31,6 +32,11 @@ function asHex(v: unknown) {
 function asBig(hex: string) {
   if (!hex || hex === "0x") return 0n;
   return BigInt(hex);
+}
+
+function asAddr(hex: string) {
+  if (!hex || hex === "0x" || hex.length < 42) return "";
+  return `0x${hex.slice(-40)}`;
 }
 
 function rpcBody(method: string, params: unknown[]) {
@@ -60,7 +66,8 @@ async function call(to: string, data: string): Promise<string> {
 
 export type DeskSnap = {
   eth: bigint;
-  nvda: bigint;
+  bag: bigint;
+  asset: string;
   unassigned: bigint;
   epoch: number;
   epochEndsAt: number;
@@ -71,7 +78,8 @@ export type DeskSnap = {
 export async function readDesk(who = ""): Promise<DeskSnap> {
   const empty: DeskSnap = {
     eth: 0n,
-    nvda: 0n,
+    bag: 0n,
+    asset: NVDA_CA,
     unassigned: 0n,
     epoch: 0,
     epochEndsAt: 0,
@@ -79,25 +87,28 @@ export async function readDesk(who = ""): Promise<DeskSnap> {
     clipBal: 0n,
   };
   if (!isAddress(VAULT_CA)) return empty;
-  const [ethH, nvdaH, unH, epH, endsH, minH] = await Promise.all([
+  const [ethH, assetH, unH, epH, endsH, minH] = await Promise.all([
     fetch(RH_RPC, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: rpcBody("eth_getBalance", [VAULT_CA, "latest"]),
     }).then((r) => r.json() as Promise<{ result?: string }>),
-    call(NVDA_CA, SEL.balanceOf + word(VAULT_CA.toLowerCase())),
+    call(VAULT_CA, SEL.clipAsset),
     call(VAULT_CA, SEL.unassigned),
     call(VAULT_CA, SEL.epoch),
     call(VAULT_CA, SEL.epochEndsAt),
     call(VAULT_CA, SEL.minClip),
   ]);
+  const asset = asAddr(assetH) || NVDA_CA;
+  const bag = asBig(await call(asset, SEL.balanceOf + word(VAULT_CA.toLowerCase())));
   let clipBal = 0n;
   if (isAddress(who) && isAddress(TOKEN_CA)) {
     clipBal = asBig(await call(TOKEN_CA, SEL.balanceOf + word(who.toLowerCase())));
   }
   return {
     eth: asBig(ethH.result ?? "0x0"),
-    nvda: asBig(nvdaH),
+    bag,
+    asset,
     unassigned: asBig(unH),
     epoch: Number(asBig(epH)),
     epochEndsAt: Number(asBig(endsH)) * 1000,
@@ -113,7 +124,7 @@ export function fmtEth(wei: bigint) {
   return n.toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
 }
 
-export function fmtNvda(wei: bigint) {
+export function fmtShares(wei: bigint) {
   const n = Number(wei) / 1e18;
   if (!Number.isFinite(n) || n === 0) return "0";
   if (n < 0.0001) return n.toExponential(2);

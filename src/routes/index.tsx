@@ -5,8 +5,8 @@ import { AddressStrip } from "@/components/addresses";
 import { ClipMark } from "@/components/clip-mark";
 import { Connect } from "@/components/connect";
 import { Tape } from "@/components/tape";
-import { CREATOR_TAX, LINE, PONS_URL, TOKEN_TICKER, VAULT_CA, isAddress } from "@/lib/catalog";
-import { encodeHarvest, fmtEth, fmtNvda, readDesk, sendVault } from "@/lib/chain";
+import { CREATOR_TAX, LINE, PONS_URL, TOKEN_TICKER, VAULT_CA, isAddress, tickerOf } from "@/lib/catalog";
+import { encodeHarvest, fmtEth, fmtShares, readDesk, sendVault } from "@/lib/chain";
 import { useWallet } from "@/lib/wallet";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -14,14 +14,15 @@ export const Route = createFileRoute("/")({ component: Home });
 const STEPS = [
   { n: "01", t: "Pons V2", d: "ETH pair. Holder sharing off. Creator tax 5% to the vault." },
   { n: "02", t: "Harvest", d: "Pons sweeps fees to escrow. Anyone pulls them here." },
-  { n: "03", t: "Clip", d: "Launch clip is NVDA. Later epochs can clip SPY, AAPL, TSLA, MSFT." },
+  { n: "03", t: "Clip", d: "Keeper wraps ETH and buys a listed name — NVDA, SPY, AAPL, TSLA, the full tape." },
   { n: "04", t: "Claim", d: "Every 15 minutes holders take their share of the shares." },
 ];
 
 function Home() {
   const address = useWallet((s) => s.address);
   const [eth, setEth] = useState("0");
-  const [nvda, setNvda] = useState("0");
+  const [bag, setBag] = useState("0");
+  const [asset, setAsset] = useState("NVDA");
   const [epoch, setEpoch] = useState(0);
   const [note, setNote] = useState("");
 
@@ -32,7 +33,8 @@ function Home() {
         const s = await readDesk(address);
         if (!alive) return;
         setEth(fmtEth(s.eth));
-        setNvda(fmtNvda(s.nvda));
+        setBag(fmtShares(s.bag));
+        setAsset(tickerOf(s.asset));
         setEpoch(s.epoch);
       } catch {
         /* empty desk */
@@ -67,7 +69,7 @@ function Home() {
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Connect />
               <Link to="/claim" className="rounded-full border border-line bg-paper px-4 py-2 text-sm">
-                Claim NVDA
+                Claim shares
               </Link>
               <a href={PONS_URL} target="_blank" rel="noreferrer" className="text-sm text-mute hover:text-ink">
                 Launch on Pons V2
@@ -78,7 +80,7 @@ function Home() {
         </div>
         <div className="grid border-t border-line sm:grid-cols-3">
           <Stat k="Vault ETH" v={`${eth} Ξ`} />
-          <Stat k="NVDA bag" v={nvda} />
+          <Stat k={`${asset} bag`} v={bag} />
           <Stat k="Epoch" v={isAddress(VAULT_CA) ? String(epoch) : "—"} />
         </div>
       </section>
@@ -104,9 +106,9 @@ function Home() {
       <section className="ticket mt-8 rounded-[var(--radius)] border border-line p-6 sm:p-8">
         <h2 className="font-display text-3xl font-medium">The desk</h2>
         <p className="mt-2 max-w-2xl text-mute">
-          ${TOKEN_TICKER} trades in ETH. Creator tax {CREATOR_TAX}% lands in ClipVault. First buy is NVIDIA • Robinhood
-          Token — the thickest book on this chain. When SPY, AAPL, TSLA or MSFT can take size, the keeper clips those
-          too. You claim the paper, not the gas.
+          ${TOKEN_TICKER} trades in ETH. Creator tax {CREATOR_TAX}% lands in ClipVault. All eleven native names are
+          listed. The keeper clips whichever book can take size that epoch — default NVDA. You claim the paper, not
+          the gas.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button

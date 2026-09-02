@@ -5,8 +5,9 @@ pragma solidity ^0.8.24;
 /// @notice Pons V2 creator-fee recipient for ClipStock ($CLIP) on Robinhood Chain (4663).
 ///         Holder sharing OFF. Pair ETH. Creator tax 5% → this vault.
 ///         harvest() pulls ETH from Pons FeeEscrow.
-///         clip() wraps ETH and buys NVDA on Uniswap V3.
-///         Holders claim NVDA each 15-minute epoch (keeper merkle).
+///         clip() wraps ETH and buys the listed clipAsset (default NVDA).
+///         Owner may switch clipAsset among native RH stocks when unassigned is 0.
+///         Holders claim that epoch's shares every 15 minutes (keeper merkle).
 /// @custom:site https://clipstock.xyz
 /// @custom:github https://github.com/ClipStockXYZ/clipstock
 
@@ -48,11 +49,12 @@ contract ClipVault {
     string public constant SITE = "https://clipstock.xyz";
     string public constant GITHUB = "https://github.com/ClipStockXYZ/clipstock";
     string public constant TELEGRAM = "https://t.me/ClipStock";
-    string public constant LINE = "Trade ETH. The desk clips NVDA. Holders take the shares.";
+    string public constant LINE = "Trade ETH. The desk clips the tape. Holders take the shares.";
 
     address public owner;
     address public keeper;
     address public clipToken;
+    address public clipAsset;
     address public router;
     uint24 public poolFee;
     uint256 public minClip;
@@ -63,10 +65,13 @@ contract ClipVault {
 
     uint256 private locked;
 
+    mapping(address => bool) public listed;
+
     struct Clip {
         bytes32 root;
         uint256 pot;
         uint256 totalWeight;
+        address token;
         bool settled;
     }
 
@@ -82,11 +87,12 @@ contract ClipVault {
     event Ownership(address indexed who);
     event KeeperSet(address indexed who);
     event TokenSet(address indexed token);
+    event AssetSet(address indexed token);
     event RouterSet(address indexed who, uint24 fee, uint256 minClip);
     event Harvested(uint256 value);
-    event Clipped(uint256 ethIn, uint256 nvdaOut);
-    event EpochSettled(uint64 indexed e, bytes32 root, uint256 pot, uint256 totalWeight);
-    event Claimed(uint64 indexed e, address indexed who, uint256 amount);
+    event Clipped(address indexed token, uint256 ethIn, uint256 out);
+    event EpochSettled(uint64 indexed e, address indexed token, bytes32 root, uint256 pot, uint256 totalWeight);
+    event Claimed(uint64 indexed e, address indexed who, address indexed token, uint256 amount);
 
     modifier onlyOwner() {
         if (msg.sender != owner) revert Auth();
@@ -113,8 +119,21 @@ contract ClipVault {
         poolFee = 3000;
         minClip = 0.02 ether;
         epochEndsAt = uint64(block.timestamp) + EPOCH;
+        _list(NVDA);
+        _list(0x117cc2133c37B721F49dE2A7a74833232B3B4C0C); // SPY
+        _list(0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9); // AAPL
+        _list(0x322F0929c4625eD5bAd873c95208D54E1c003b2d); // TSLA
+        _list(0xe93237C50D904957Cf27E7B1133b510C669c2e74); // MSFT
+        _list(0xc0D6457C16Cc70d6790Dd43521C899C87ce02f35); // META
+        _list(0x894E1EC2D74FFE5AEF8Dc8A9e84686acCB964F2A); // PLTR
+        _list(0x6330D8C3178a418788dF01a47479c0ce7CCF450b); // COIN
+        _list(0x2e0847E8910a9732eB3fb1bb4b70a580ADAD4FE3); // GOOGL
+        _list(0x12f190a9F9d7D37a250758b26824B97CE941bF54); // AMZN
+        _list(0xF0C4BF4C582cb3836e98394b1d4e7B7281101bE8); // RBLX
+        clipAsset = NVDA;
         emit Ownership(msg.sender);
         emit KeeperSet(keeper_);
+        emit AssetSet(NVDA);
     }
 
     receive() external payable {}
@@ -126,6 +145,8 @@ contract ClipVault {
     }
 
     function clip(uint256 minOut) external onlyKeeper lock {
+        address asset = clipAsset;
+        if (!listed[asset]) revert Bad();
         uint256 amount = address(this).balance;
         if (amount < minClip) revert Early();
         IWETH(WETH).deposit{value: amount}();
@@ -133,7 +154,7 @@ contract ClipVault {
         uint256 out = ISwapRouter02(router).exactInputSingle(
             ISwapRouter02.ExactInputSingleParams({
                 tokenIn: WETH,
-                tokenOut: NVDA,
+                tokenOut: asset,
                 fee: poolFee,
                 recipient: address(this),
                 amountIn: amount,
@@ -142,7 +163,7 @@ contract ClipVault {
             })
         );
         unassigned += out;
-        emit Clipped(amount, out);
+        emit Clipped(asset, amount, out);
     }
 
     function settleEpoch(bytes32 root, uint256 totalWeight) external onlyKeeper lock {
@@ -151,8 +172,9 @@ contract ClipVault {
         if (clips[e].settled) revert Bad();
         uint256 pot = unassigned;
         unassigned = 0;
-        clips[e] = Clip(root, pot, totalWeight, true);
-        emit EpochSettled(e, root, pot, totalWeight);
+        address token = clipAsset;
+        clips[e] = Clip(root, pot, totalWeight, token, true);
+        emit EpochSettled(e, token, root, pot, totalWeight);
         epoch = e + 1;
         if (block.timestamp < epochEndsAt + EPOCH) {
             epochEndsAt = epochEndsAt + EPOCH;
@@ -171,11 +193,11 @@ contract ClipVault {
         claimed[e][msg.sender] = true;
         uint256 amount = (info.pot * weight) / info.totalWeight;
         if (amount == 0) {
-            emit Claimed(e, msg.sender, 0);
+            emit Claimed(e, msg.sender, info.token, 0);
             return;
         }
-        _safeTransfer(NVDA, msg.sender, amount);
-        emit Claimed(e, msg.sender, amount);
+        _safeTransfer(info.token, msg.sender, amount);
+        emit Claimed(e, msg.sender, info.token, amount);
     }
 
     function setKeeper(address who) external onlyOwner {
@@ -188,6 +210,13 @@ contract ClipVault {
         if (token == address(0)) revert Bad();
         clipToken = token;
         emit TokenSet(token);
+    }
+
+    function setClipAsset(address token) external onlyOwner {
+        if (!listed[token]) revert Bad();
+        if (unassigned != 0) revert Early();
+        clipAsset = token;
+        emit AssetSet(token);
     }
 
     function setRouter(address who, uint24 fee, uint256 minEth) external onlyOwner {
@@ -212,6 +241,10 @@ contract ClipVault {
         } else {
             _safeTransfer(token, to, amount);
         }
+    }
+
+    function _list(address token) internal {
+        listed[token] = true;
     }
 
     function _verify(bytes32[] calldata proof, bytes32 root, bytes32 leaf) internal pure returns (bool) {

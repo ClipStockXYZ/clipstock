@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
 import { Connect } from "@/components/connect";
-import { TOKEN_CA, VAULT_CA, isAddress } from "@/lib/catalog";
-import { fmtNvda, readDesk } from "@/lib/chain";
+import { TOKEN_CA, VAULT_CA, isAddress, tickerOf } from "@/lib/catalog";
+import { fmtShares, readDesk } from "@/lib/chain";
 import { shortAddr, useWallet } from "@/lib/wallet";
 
 export const Route = createFileRoute("/claim")({ component: Claim });
@@ -12,7 +12,8 @@ export const Route = createFileRoute("/claim")({ component: Claim });
 function Claim() {
   const address = useWallet((s) => s.address);
   const [clipBal, setClipBal] = useState("0");
-  const [nvda, setNvda] = useState("0");
+  const [bag, setBag] = useState("0");
+  const [asset, setAsset] = useState("NVDA");
   const [epoch, setEpoch] = useState(0);
 
   useEffect(() => {
@@ -21,8 +22,9 @@ function Claim() {
       try {
         const s = await readDesk(address);
         if (!alive) return;
-        setClipBal(fmtNvda(s.clipBal));
-        setNvda(fmtNvda(s.nvda));
+        setClipBal(fmtShares(s.clipBal));
+        setBag(fmtShares(s.bag));
+        setAsset(tickerOf(s.asset));
         setEpoch(s.epoch);
       } catch {
         /* */
@@ -40,8 +42,7 @@ function Claim() {
     <Shell>
       <h1 className="font-display text-5xl font-semibold tracking-tight">Claim</h1>
       <p className="mt-3 max-w-xl text-lg text-mute">
-        Hold $CLIP through the epoch. The desk pays NVDA, not ETH. Proofs go live after the first clip
-        settles.
+        Hold $CLIP through the epoch. The desk pays the clipped name — NVDA, SPY, AAPL, the tape — not ETH.
       </p>
 
       <div className="mt-6 flex items-center gap-3">
@@ -51,7 +52,7 @@ function Claim() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <Card k="Your $CLIP" v={address ? clipBal : "—"} />
-        <Card k="Vault NVDA" v={isAddress(VAULT_CA) ? nvda : "—"} />
+        <Card k={`Vault ${asset}`} v={isAddress(VAULT_CA) ? bag : "—"} />
         <Card k="Epoch" v={isAddress(VAULT_CA) ? String(epoch) : "—"} />
       </div>
 
@@ -69,7 +70,7 @@ function Claim() {
           disabled
           className="mt-5 rounded-full bg-ink px-5 py-2.5 text-sm text-bg disabled:opacity-40"
         >
-          Claim NVDA
+          Claim {asset}
         </button>
       </div>
 

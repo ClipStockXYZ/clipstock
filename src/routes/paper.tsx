@@ -13,9 +13,9 @@ const ROWS = [
   ["Creator tax", `${CREATOR_TAX}% to ClipVault`],
   ["Creator wallet", "ClipVault, not an EOA"],
   ["Harvest", "FeeEscrow.claim() into the vault"],
-  ["Clip", "This vault buys NVDA. A later vault can clip SPY AAPL TSLA MSFT"],
+  ["Clip", "Keeper buys a listed name (default NVDA). setClipAsset when the bag is empty"],
   ["Pay", "That epoch's shares to $CLIP holders, 15 minutes"],
-  ["Tape", "NVDA SPY AAPL TSLA MSFT META PLTR COIN GOOGL AMZN RBLX — native RH tokens"],
+  ["Tape", "NVDA SPY AAPL TSLA MSFT META PLTR COIN GOOGL AMZN RBLX — all listed on the vault"],
   ["Snipe", "Team wallets only, fixed at launch"],
 ];
 
