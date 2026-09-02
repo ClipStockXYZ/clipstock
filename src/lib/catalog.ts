@@ -12,7 +12,7 @@ export const CHAIN_NAME = "Robinhood Chain";
 export const EXPLORER_URL = "https://robinhoodchain.blockscout.com";
 
 export const TOKEN_CA = "";
-export const VAULT_CA = "";
+export const VAULT_CA = "0xf3119FF8302baA20a8Ba73f8D4597AcF3D8270fd";
 
 export const NVDA_CA = "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC";
 export const WETH_CA = "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73";
