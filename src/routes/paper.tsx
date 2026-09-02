@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
 import { Tape } from "@/components/tape";
-import { CREATOR_TAX, GH_URL, LINE, PONS_DOCS, PONS_URL, SITE_URL, TG_URL } from "@/lib/catalog";
+import { CREATOR_TAX, GH_URL, LINE, PONS_DOCS, PONS_URL, SITE_URL, TG_URL, X_URL } from "@/lib/catalog";
 
 export const Route = createFileRoute("/paper")({ component: Paper });
 
@@ -58,6 +58,11 @@ function Paper() {
             <li>
               <a className="text-forest underline" href={SITE_URL} target="_blank" rel="noreferrer">
                 clipstock.xyz
+              </a>
+            </li>
+            <li>
+              <a className="text-forest underline" href={X_URL} target="_blank" rel="noreferrer">
+                x.com/clipstockXYZ
               </a>
             </li>
             <li>

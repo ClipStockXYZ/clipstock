@@ -5,6 +5,7 @@ Trade ETH. The desk clips the tape. Holders take the shares.
 - Token: ClipStock
 - Ticker: `$CLIP`
 - Site: [clipstock.xyz](https://clipstock.xyz)
+- X: [@clipstockXYZ](https://x.com/clipstockXYZ)
 - Chain: Robinhood (4663)
 - Pad: [Pons V2](https://www.ponsfamily.com/create)
 

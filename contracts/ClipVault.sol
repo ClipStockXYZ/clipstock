@@ -9,6 +9,7 @@ pragma solidity ^0.8.24;
 ///         Owner may switch clipAsset among native RH stocks when unassigned is 0.
 ///         Holders claim that epoch's shares every 15 minutes (keeper merkle).
 /// @custom:site https://clipstock.xyz
+/// @custom:x https://x.com/clipstockXYZ
 /// @custom:github https://github.com/ClipStockXYZ/clipstock
 
 interface IFeeEscrow {
@@ -47,6 +48,7 @@ contract ClipVault {
     address public constant NVDA = 0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC;
 
     string public constant SITE = "https://clipstock.xyz";
+    string public constant X = "https://x.com/clipstockXYZ";
     string public constant GITHUB = "https://github.com/ClipStockXYZ/clipstock";
     string public constant TELEGRAM = "https://t.me/ClipStock";
     string public constant LINE = "Trade ETH. The desk clips the tape. Holders take the shares.";

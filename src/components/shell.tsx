@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Connect } from "@/components/connect";
 import { ClipMark } from "@/components/clip-mark";
 import { TapeRibbon } from "@/components/tape-ribbon";
-import { GH_URL, LINE, TG_URL, TOKEN_TICKER } from "@/lib/catalog";
+import { GH_URL, LINE, TG_URL, TOKEN_TICKER, X_URL } from "@/lib/catalog";
 
 const NAV = [
   { to: "/", label: "Desk" },
@@ -33,6 +33,9 @@ export function Shell({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2">
+            <a href={X_URL} target="_blank" rel="noreferrer" className="hidden px-2 text-sm text-mute hover:text-ink sm:inline">
+              X
+            </a>
             <a href={GH_URL} target="_blank" rel="noreferrer" className="hidden px-2 text-sm text-mute hover:text-ink sm:inline">
               Git
             </a>
@@ -62,6 +65,9 @@ export function Shell({ children }: { children: ReactNode }) {
           ${TOKEN_TICKER} · {LINE}
         </p>
         <p className="mt-2 flex flex-wrap gap-3">
+          <a className="hover:text-ink" href={X_URL} target="_blank" rel="noreferrer">
+            X
+          </a>
           <a className="hover:text-ink" href={GH_URL} target="_blank" rel="noreferrer">
             GitHub
           </a>
