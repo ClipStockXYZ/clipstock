@@ -21,7 +21,8 @@ AGENTS.project.md
 .project_id
 routeTree.gen.ts
 *.zip
-desktop-bots/
+HANDOFF.md
+CONTINUE.md
 
 # leftover other launches
 public/till-*
