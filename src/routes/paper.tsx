@@ -26,6 +26,10 @@ function Paper() {
       <p className="mt-3 max-w-xl text-lg text-mute">{LINE}</p>
 
       <section className="ticket mt-8 overflow-hidden rounded-[var(--radius)] border border-line">
+        <img src="/desk/flow.jpg" alt="Harvest, clip, tape, claim" className="w-full object-cover" />
+      </section>
+
+      <section className="ticket mt-8 overflow-hidden rounded-[var(--radius)] border border-line">
         {ROWS.map(([k, v]) => (
           <div key={k} className="flex flex-wrap items-baseline justify-between gap-3 border-t border-line px-5 py-4 first:border-t-0">
             <p className="text-sm text-mute">{k}</p>

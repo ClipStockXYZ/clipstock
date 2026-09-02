@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
-import { ClipMark } from "@/components/clip-mark";
 import { Connect } from "@/components/connect";
 import { Tape } from "@/components/tape";
 import { CREATOR_TAX, LINE, PONS_URL, TOKEN_TICKER, VAULT_CA, isAddress, tickerOf } from "@/lib/catalog";
@@ -61,14 +60,14 @@ function Home() {
   return (
     <Shell>
       <section className="ticket overflow-hidden rounded-[var(--radius)] border border-line">
-        <div className="flex items-start justify-between gap-6 px-6 py-8 sm:px-10 sm:py-12">
-          <div className="max-w-xl">
+        <div className="grid lg:grid-cols-2">
+          <div className="flex flex-col justify-center px-6 py-8 sm:px-10 sm:py-12">
             <p className="text-xs font-medium uppercase tracking-[0.22em] text-mute">Robinhood Chain · $CLIP</p>
             <h1 className="mt-3 font-display text-5xl font-semibold tracking-tight sm:text-7xl">ClipStock</h1>
             <p className="mt-4 max-w-md text-lg text-mute">{LINE}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Connect />
-              <Link to="/claim" className="rounded-full border border-line bg-paper px-4 py-2 text-sm">
+              <Link to="/claim" className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition-transform duration-150 ease-out active:scale-[0.96]">
                 Claim shares
               </Link>
               <a href={PONS_URL} target="_blank" rel="noreferrer" className="text-sm text-mute hover:text-ink">
@@ -76,7 +75,11 @@ function Home() {
               </a>
             </div>
           </div>
-          <ClipMark className="hidden h-28 w-28 sm:block" />
+          <img
+            src="/desk/hero.jpg"
+            alt="Desk of clipped NVDA SPY AAPL TSLA tickets"
+            className="h-56 w-full object-cover lg:h-full"
+          />
         </div>
         <div className="grid border-t border-line sm:grid-cols-3">
           <Stat k="Vault ETH" v={`${eth} Ξ`} />
@@ -92,6 +95,14 @@ function Home() {
       <div className="mt-6">
         <AddressStrip />
       </div>
+
+      <section className="ticket mt-8 overflow-hidden rounded-[var(--radius)] border border-line">
+        <img src="/desk/flow.jpg" alt="ETH, clip, tape, claim" className="w-full object-cover" />
+        <div className="px-6 py-5">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-mute">The loop</p>
+          <h2 className="mt-1 font-display text-3xl font-medium">Harvest. Clip. Claim the paper.</h2>
+        </div>
+      </section>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {STEPS.map((s) => (

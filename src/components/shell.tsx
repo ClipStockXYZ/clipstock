@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Connect } from "@/components/connect";
 import { ClipMark } from "@/components/clip-mark";
+import { TapeRibbon } from "@/components/tape-ribbon";
 import { GH_URL, LINE, TG_URL, TOKEN_TICKER } from "@/lib/catalog";
 
 const NAV = [
@@ -41,6 +42,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <Connect />
           </div>
         </div>
+        <TapeRibbon />
       </header>
       <nav className="flex gap-2 overflow-x-auto px-4 py-2 text-sm sm:hidden">
         {NAV.map((n) => (

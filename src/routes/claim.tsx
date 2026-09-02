@@ -50,28 +50,37 @@ function Claim() {
         {address ? <p className="font-mono text-sm text-mute">{shortAddr(address)}</p> : null}
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <Card k="Your $CLIP" v={address ? clipBal : "—"} />
-        <Card k={`Vault ${asset}`} v={isAddress(VAULT_CA) ? bag : "—"} />
-        <Card k="Epoch" v={isAddress(VAULT_CA) ? String(epoch) : "—"} />
-      </div>
+      <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1fr_280px]">
+        <div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Card k="Your $CLIP" v={address ? clipBal : "—"} />
+            <Card k={`Vault ${asset}`} v={isAddress(VAULT_CA) ? bag : "—"} />
+            <Card k="Epoch" v={isAddress(VAULT_CA) ? String(epoch) : "—"} />
+          </div>
 
-      <div className="ticket mt-8 rounded-[var(--radius)] border border-line p-6">
-        <h2 className="font-display text-2xl font-medium">This epoch</h2>
-        {!address ? (
-          <p className="mt-2 text-mute">Connect a wallet on Robinhood 4663.</p>
-        ) : !ready ? (
-          <p className="mt-2 text-mute">Vault and $CLIP are not live. Claim stays closed until both CAs are set.</p>
-        ) : (
-          <p className="mt-2 text-mute">No merkle proof for this wallet yet. Harvest, clip, then the keeper posts the epoch.</p>
-        )}
-        <button
-          type="button"
-          disabled
-          className="mt-5 rounded-full bg-ink px-5 py-2.5 text-sm text-bg disabled:opacity-40"
-        >
-          Claim {asset}
-        </button>
+          <div className="ticket mt-6 rounded-[var(--radius)] border border-line p-6">
+            <h2 className="font-display text-2xl font-medium">This epoch</h2>
+            {!address ? (
+              <p className="mt-2 text-mute">Connect a wallet on Robinhood 4663.</p>
+            ) : !ready ? (
+              <p className="mt-2 text-mute">Vault and $CLIP are not live. Claim stays closed until both CAs are set.</p>
+            ) : (
+              <p className="mt-2 text-mute">No merkle proof for this wallet yet. Harvest, clip, then the keeper posts the epoch.</p>
+            )}
+            <button
+              type="button"
+              disabled
+              className="mt-5 rounded-full bg-ink px-5 py-2.5 text-sm text-bg disabled:opacity-40"
+            >
+              Claim {asset}
+            </button>
+          </div>
+        </div>
+        <img
+          src="/desk/ticket.jpg"
+          alt="ClipStock share ticket"
+          className="w-full rounded-[var(--radius)] border border-line object-cover"
+        />
       </div>
 
       <div className="mt-6">

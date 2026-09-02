@@ -57,29 +57,61 @@ export function Tape() {
       <div className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">
         {rows.map((s) => {
           const on = s.ca.toLowerCase() === asset.toLowerCase();
+          const peak = Math.max(...rows.map((r) => r.vol), 1);
+          const bar = Math.max(4, Math.round((s.vol / peak) * 100));
           return (
             <a
               key={s.ticker}
               href={`${EXPLORER_URL}/token/${s.ca}`}
               target="_blank"
               rel="noreferrer"
-              className="flex items-baseline justify-between gap-3 border-t border-line px-6 py-4 hover:bg-bg sm:border-r"
+              className="border-t border-line px-6 py-4 hover:bg-bg sm:border-r"
             >
-              <span className="flex items-center gap-2">
-                <span className="font-mono text-sm font-medium">{s.ticker}</span>
-                {on ? (
-                  <span className="rounded-full bg-forest px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-forest-fg">
-                    clipping
+              <span className="flex items-center justify-between gap-3">
+                <span className="flex items-center gap-2">
+                  <Stub hot={on} ticker={s.ticker} />
+                  <span>
+                    <span className="block font-mono text-sm font-medium">{s.ticker}</span>
+                    <span className="text-xs text-mute">{s.name}</span>
                   </span>
-                ) : (
-                  <span className="rounded-full border border-line px-2 py-0.5 text-[10px] uppercase tracking-wide text-mute">listed</span>
-                )}
+                </span>
+                <span className="text-right">
+                  {on ? (
+                    <span className="rounded-full bg-forest px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-forest-fg">
+                      clipping
+                    </span>
+                  ) : (
+                    <span className="rounded-full border border-line px-2 py-0.5 text-[10px] uppercase tracking-wide text-mute">
+                      listed
+                    </span>
+                  )}
+                  <span className="mt-1 block font-mono text-sm tabular-nums">{fmtUsd(s.vol) || "—"}</span>
+                </span>
               </span>
-              <span className="font-mono text-sm tabular-nums text-mute">{fmtUsd(s.vol) || "—"}</span>
+              <span className="mt-3 block h-1.5 overflow-hidden rounded-full bg-line">
+                <span
+                  className="block h-full rounded-full bg-forest"
+                  style={{ width: `${bar}%` }}
+                />
+              </span>
             </a>
           );
         })}
       </div>
     </section>
+  );
+}
+
+function Stub({ ticker, hot }: { ticker: string; hot: boolean }) {
+  return (
+    <span
+      className={`relative inline-flex h-10 w-8 flex-col overflow-hidden rounded-sm border ${
+        hot ? "border-forest bg-forest text-forest-fg" : "border-line bg-paper text-ink"
+      }`}
+      aria-hidden
+    >
+      <span className={`h-2 w-full ${hot ? "bg-brass" : "bg-forest"}`} />
+      <span className="flex flex-1 items-center justify-center font-mono text-[8px] leading-none">{ticker.slice(0, 4)}</span>
+    </span>
   );
 }
