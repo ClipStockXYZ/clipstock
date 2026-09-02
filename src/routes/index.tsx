@@ -4,6 +4,7 @@ import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
 import { ClipMark } from "@/components/clip-mark";
 import { Connect } from "@/components/connect";
+import { Tape } from "@/components/tape";
 import { CREATOR_TAX, LINE, PONS_URL, TOKEN_TICKER, VAULT_CA, isAddress } from "@/lib/catalog";
 import { encodeHarvest, fmtEth, fmtNvda, readDesk, sendVault } from "@/lib/chain";
 import { useWallet } from "@/lib/wallet";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/")({ component: Home });
 const STEPS = [
   { n: "01", t: "Pons V2", d: "ETH pair. Holder sharing off. Creator tax 5% to the vault." },
   { n: "02", t: "Harvest", d: "Pons sweeps fees to escrow. Anyone pulls them here." },
-  { n: "03", t: "Clip", d: "The desk wraps ETH and buys NVDA on Uniswap V3." },
+  { n: "03", t: "Clip", d: "Launch clip is NVDA. Later epochs can clip SPY, AAPL, TSLA, MSFT." },
   { n: "04", t: "Claim", d: "Every 15 minutes holders take their share of the shares." },
 ];
 
@@ -83,6 +84,10 @@ function Home() {
       </section>
 
       <div className="mt-6">
+        <Tape />
+      </div>
+
+      <div className="mt-6">
         <AddressStrip />
       </div>
 
@@ -99,9 +104,9 @@ function Home() {
       <section className="ticket mt-8 rounded-[var(--radius)] border border-line p-6 sm:p-8">
         <h2 className="font-display text-3xl font-medium">The desk</h2>
         <p className="mt-2 max-w-2xl text-mute">
-          Pons already pays quote crumbs if you flip holder sharing. We do not. ${TOKEN_TICKER} trades in ETH.
-          Creator tax {CREATOR_TAX}% lands in ClipVault. The vault buys NVIDIA • Robinhood Token. You claim the
-          paper, not the gas.
+          ${TOKEN_TICKER} trades in ETH. Creator tax {CREATOR_TAX}% lands in ClipVault. First buy is NVIDIA • Robinhood
+          Token — the thickest book on this chain. When SPY, AAPL, TSLA or MSFT can take size, the keeper clips those
+          too. You claim the paper, not the gas.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button

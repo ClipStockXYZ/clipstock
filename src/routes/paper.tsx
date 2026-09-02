@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
+import { Tape } from "@/components/tape";
 import { CREATOR_TAX, GH_URL, LINE, PONS_DOCS, PONS_URL, SITE_URL, TG_URL } from "@/lib/catalog";
 
 export const Route = createFileRoute("/paper")({ component: Paper });
@@ -12,8 +13,9 @@ const ROWS = [
   ["Creator tax", `${CREATOR_TAX}% to ClipVault`],
   ["Creator wallet", "ClipVault, not an EOA"],
   ["Harvest", "FeeEscrow.claim() into the vault"],
-  ["Clip", "ETH → WETH → NVDA on Uniswap V3"],
-  ["Pay", "NVDA to $CLIP holders, 15 minute epochs"],
+  ["Clip", "This vault buys NVDA. A later vault can clip SPY AAPL TSLA MSFT"],
+  ["Pay", "That epoch's shares to $CLIP holders, 15 minutes"],
+  ["Tape", "NVDA SPY AAPL TSLA MSFT META PLTR COIN GOOGL AMZN RBLX — native RH tokens"],
   ["Snipe", "Team wallets only, fixed at launch"],
 ];
 
@@ -73,6 +75,10 @@ function Paper() {
           </ul>
         </article>
       </section>
+
+      <div className="mt-8">
+        <Tape />
+      </div>
 
       <div className="mt-8">
         <AddressStrip />
