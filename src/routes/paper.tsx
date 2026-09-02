@@ -26,6 +26,10 @@ function Paper() {
       <p className="mt-3 max-w-xl text-lg text-mute">{LINE}</p>
 
       <section className="ticket mt-8 overflow-hidden rounded-[var(--radius)] border border-line">
+        <img src="/desk/cover.jpg" alt="ClipStock tape cover" className="w-full object-cover" />
+      </section>
+
+      <section className="ticket mt-8 overflow-hidden rounded-[var(--radius)] border border-line">
         <img src="/desk/flow.jpg" alt="Harvest, clip, tape, claim" className="w-full object-cover" />
       </section>
 
