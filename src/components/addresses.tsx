@@ -40,7 +40,7 @@ function Row({ label, value, empty }: { label: string; value: string; empty: str
 export function AddressStrip() {
   return (
     <section className="ticket overflow-hidden rounded-[var(--radius)] border border-line">
-      <Row label="$CLIP" value={TOKEN_CA} empty="— waiting Pons V2" />
+      <Row label="$CLIP" value={TOKEN_CA} empty="— waiting LetsCash" />
       <Row label="ClipVault" value={VAULT_CA} empty="— deploy next" />
       <Row label="NVDA" value={NVDA_CA} empty="" />
     </section>

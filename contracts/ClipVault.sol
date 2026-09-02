@@ -2,9 +2,9 @@
 pragma solidity ^0.8.24;
 
 /// @title ClipVault
-/// @notice Pons V2 creator-fee recipient for ClipStock ($CLIP) on Robinhood Chain (4663).
-///         Holder sharing OFF. Pair ETH. Creator tax 5% → this vault.
-///         harvest() pulls ETH from Pons FeeEscrow.
+/// @notice LetsCash fee recipient for ClipStock ($CLIP) on Robinhood Chain (4663).
+///         Pair ETH. Creator tax 5% → this vault (ETH lands via receive()).
+///         harvest() pulls leftover escrow if any. LetsCash pays ETH to this vault.
 ///         clip() wraps ETH and buys the listed clipAsset (default NVDA).
 ///         Owner may switch clipAsset among native RH stocks when unassigned is 0.
 ///         Holders claim that epoch's shares every 15 minutes (keeper merkle).

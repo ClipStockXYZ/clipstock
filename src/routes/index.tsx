@@ -4,15 +4,15 @@ import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
 import { Connect } from "@/components/connect";
 import { Tape } from "@/components/tape";
-import { CREATOR_TAX, LINE, PONS_URL, TOKEN_TICKER, VAULT_CA, isAddress, tickerOf } from "@/lib/catalog";
+import { CREATOR_TAX, LINE, PAD_URL, TOKEN_TICKER, VAULT_CA, isAddress, tickerOf } from "@/lib/catalog";
 import { encodeHarvest, fmtEth, fmtShares, readDesk, sendVault } from "@/lib/chain";
 import { useWallet } from "@/lib/wallet";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 const STEPS = [
-  { n: "01", t: "Pons V2", d: "ETH pair. Holder sharing off. Creator tax 5% to the vault." },
-  { n: "02", t: "Harvest", d: "Pons sweeps fees to escrow. Anyone pulls them here." },
+  { n: "01", t: "LetsCash", d: "ETH pair. Creator tax 5% to the vault." },
+  { n: "02", t: "Harvest", d: "The pad pays ClipVault in ETH. Anyone can pull leftovers into the desk." },
   { n: "03", t: "Clip", d: "Keeper wraps ETH and buys a listed name — NVDA, SPY, AAPL, TSLA, the full tape." },
   { n: "04", t: "Claim", d: "Every 15 minutes holders take their share of the shares." },
 ];
@@ -70,8 +70,8 @@ function Home() {
               <Link to="/claim" className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition-transform duration-150 ease-out active:scale-[0.96]">
                 Claim shares
               </Link>
-              <a href={PONS_URL} target="_blank" rel="noreferrer" className="text-sm text-mute hover:text-ink">
-                Launch on Pons V2
+              <a href={PAD_URL} target="_blank" rel="noreferrer" className="text-sm text-mute hover:text-ink">
+                Launch on LetsCash
               </a>
             </div>
           </div>
@@ -128,7 +128,7 @@ function Home() {
             disabled={!isAddress(VAULT_CA) || !address}
             className="rounded-full bg-forest px-5 py-2.5 text-sm font-medium text-forest-fg disabled:opacity-40"
           >
-            Harvest escrow
+            Harvest
           </button>
           <Link to="/paper" className="rounded-full border border-line px-5 py-2.5 text-sm">
             Read the paper

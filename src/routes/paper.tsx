@@ -2,17 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Shell } from "@/components/shell";
 import { AddressStrip } from "@/components/addresses";
 import { Tape } from "@/components/tape";
-import { CREATOR_TAX, GH_URL, LINE, PONS_DOCS, PONS_URL, SITE_URL, TG_URL, X_URL } from "@/lib/catalog";
+import { CREATOR_TAX, GH_URL, LINE, PAD_DOCS, PAD_URL, SITE_URL, TG_URL, X_URL } from "@/lib/catalog";
 
 export const Route = createFileRoute("/paper")({ component: Paper });
 
 const ROWS = [
-  ["Pad", "Pons V2 only"],
+  ["Pad", "LetsCash"],
   ["Pair", "ETH"],
-  ["Holder sharing", "Off — Pons crumbs are not the product"],
+  ["Fee recipient", "ClipVault, not an EOA"],
   ["Creator tax", `${CREATOR_TAX}% to ClipVault`],
-  ["Creator wallet", "ClipVault, not an EOA"],
-  ["Harvest", "FeeEscrow.claim() into the vault"],
+  ["Harvest", "ETH lands in the vault. Harvest pulls leftovers"],
   ["Clip", "Keeper buys a listed name (default NVDA). setClipAsset when the bag is empty"],
   ["Pay", "That epoch's shares to $CLIP holders, 15 minutes"],
   ["Tape", "NVDA SPY AAPL TSLA MSFT META PLTR COIN GOOGL AMZN RBLX — all listed on the vault"],
@@ -47,7 +46,7 @@ function Paper() {
           <h2 className="font-display text-2xl font-medium">Launch order</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-mute">
             <li>Deploy ClipVault. Keeper = your crank EOA.</li>
-            <li>Pons V2 form: sharing off, pair ETH, tax {CREATOR_TAX}%, creator wallet = vault.</li>
+            <li>LetsCash: pair ETH, tax {CREATOR_TAX}%, fee recipient = vault.</li>
             <li>Paste $CLIP into the vault with setClipToken.</li>
             <li>Site catalog gets both CAs. Harvest is public. Clip is keeper.</li>
           </ol>
@@ -76,13 +75,13 @@ function Paper() {
               </a>
             </li>
             <li>
-              <a className="text-forest underline" href={PONS_URL} target="_blank" rel="noreferrer">
-                Pons create
+              <a className="text-forest underline" href={PAD_URL} target="_blank" rel="noreferrer">
+                letscash.fun
               </a>
             </li>
             <li>
-              <a className="text-forest underline" href={PONS_DOCS} target="_blank" rel="noreferrer">
-                Pons V2 docs
+              <a className="text-forest underline" href={PAD_DOCS} target="_blank" rel="noreferrer">
+                LetsCash docs
               </a>
             </li>
           </ul>
