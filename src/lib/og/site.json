@@ -1,0 +1,8 @@
+{
+  "name": "ClipStock",
+  "shortName": "CLIP",
+  "description": "Trade ETH. The desk clips NVDA. Holders take the shares.",
+  "themeColor": "#1f6b4a",
+  "backgroundColor": "#f3eee4",
+  "card": "custom"
+}
