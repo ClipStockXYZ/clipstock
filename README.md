@@ -2,7 +2,7 @@
 
 Trade ETH. The desk clips the tape. Holders take the shares.
 
-- Token: ClipStock `$CLIP`
+- Token: ClipStock `$CLIP` [`0x713e…12cc`](https://robinhoodchain.blockscout.com/address/0x713e225bcb357835b2ebca91eec5064426a412cc)
 - Ticker: `$CLIP`
 - Site: [clipstock.xyz](https://clipstock.xyz)
 - X: [@clipstockXYZ](https://x.com/clipstockXYZ)
