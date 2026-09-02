@@ -11,7 +11,7 @@ export const CHAIN_ID = 4663;
 export const CHAIN_NAME = "Robinhood Chain";
 export const EXPLORER_URL = "https://robinhoodchain.blockscout.com";
 
-export const TOKEN_CA = "0x512D03315560a498Fc2355c585B11524A3932184";
+export const TOKEN_CA = "";
 export const VAULT_CA = "0x0ECb3e71DBA0e084499E8E5e3F33587a2fabE5ec";
 
 export const NVDA_CA = "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC";
